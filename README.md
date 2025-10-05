@@ -8,14 +8,74 @@ Extensions of Unix CLI utilities supporting filtering with XMP metadata awarenes
 - **WSL2 (Windows Subsystem for Linux 2) on Windows 11**: Fully compatible
 - **macOS**: Not yet tested, but should work with proper dependencies
 
-## Dependencies
+## Prerequisites
 
-- **ExifTool**: Required for all metadata operations
-  - Linux: `sudo apt install libimage-exiftool-perl` or `sudo dnf install perl-Image-ExifTool`
+### Required Tools
+
+**ExifTool** - Core dependency for all XMP metadata operations
+- **Linux (Debian/Ubuntu)**: `sudo apt install libimage-exiftool-perl`
+- **Linux (RHEL/Fedora)**: `sudo dnf install perl-Image-ExifTool`
+- **WSL2**: Same as Linux distributions above
+- **macOS**: `brew install exiftool`
+- **Alternative**: Download from [ExifTool website](https://exiftool.org/)
+
+**Bash** - Shell environment (version 4.0+ recommended)
+- Pre-installed on most Linux distributions and WSL2
+- macOS: Use built-in bash or upgrade via `brew install bash`
+
+### Script-Specific Requirements
+
+**For xmp_find.sh:**
+- **GNU findutils** (recommended but not required)
+  - Linux: Usually pre-installed
+  - macOS: `brew install findutils` (GNU find will be available as `gfind`)
+  - If GNU find unavailable, script falls back to outputting NUL-delimited lists for use with `xargs -0`
+
+**For xmp_rsync.sh:**
+- **rsync** (required)
+  - Linux: `sudo apt install rsync` or `sudo dnf install rsync`
   - WSL2: Same as Linux
-  - macOS: `brew install exiftool`
-- **GNU findutils**: Optional but recommended for `xmp_find.sh`
-- **rsync**: Required for `xmp_rsync.sh`
+  - macOS: Pre-installed or `brew install rsync`
+
+### Standard Unix Utilities
+
+Both scripts rely on standard Unix utilities that are typically pre-installed:
+
+**Core utilities:**
+- `sort` - File list deduplication and sorting
+- `awk` - Text processing (NUL conversion fallback)
+- `sed` - Stream editing (XMP sidecar processing)
+- `tr` - Character translation (counting and format conversion)
+- `wc` - Word/line/character counting
+- `head` - Debug output limiting
+- `cat` - File output
+- `printf` - Formatted output
+- `mkdir` - Directory creation
+- `grep` - Pattern matching
+
+**File system utilities:**
+- `readlink` - Path resolution
+- `mktemp` - Temporary file creation
+- `rm` - Cleanup operations
+
+### Perl Modules (for ExifTool)
+
+ExifTool requires Perl and specific modules. When installing via package managers, dependencies are handled automatically. For manual installations:
+
+- **Perl** 5.004 or later
+- **File::RandomAccess** (included with ExifTool)
+- **Time::HiRes** (optional, for high-resolution timestamps)
+
+### Version Compatibility
+
+**ExifTool versions:**
+- Minimum: Any version supporting `-if` expressions
+- Recommended: Version 12.0+ for optimal `-0` (NUL output) support
+- Scripts automatically detect and work around missing `-0` flag in older versions
+
+**Bash versions:**
+- Minimum: Bash 4.0 (for associative arrays and advanced parameter expansion)
+- Recommended: Bash 4.2+ (for full compatibility with all script features)
 
 ## Scripts Overview
 
