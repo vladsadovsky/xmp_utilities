@@ -1,0 +1,2 @@
+-if
+$XMP:HierarchicalSubject =~ /Family/i or $XMP:Subject =~ /\bFamily\b/i
